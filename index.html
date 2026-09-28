@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tierra's Intelligence OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff; --panel:#faf5f1; --ink:#292929; --soft:#5f5753; --faint:#8f8580; --line:#ece4de;
+  --bordeaux:#72003c; --red:#c10808; --citrus:#ffe300; --pink:#ff99d4; --pinkbg:#ffe3f2; --citrusbg:#fff7b8;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141112;--panel:#1f1a1b;--ink:#f6efea;--soft:#c9bdb6;--faint:#9a8e88;--line:#342c2d;--pinkbg:#4a1f36;--citrusbg:#4a4210}}
+:root[data-theme="dark"]{--bg:#141112;--panel:#1f1a1b;--ink:#f6efea;--soft:#c9bdb6;--faint:#9a8e88;--line:#342c2d;--pinkbg:#4a1f36;--citrusbg:#4a4210}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:36px 24px 80px}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-weight:400}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bordeaux)}
+header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:22px}
+h1{margin:6px 0 0;font-size:clamp(40px,6vw,68px);line-height:1}
+.north{max-width:460px;color:var(--soft);margin:0}
+.editbtn{font:inherit;font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.editbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:28px;position:sticky;top:0;background:var(--bg);padding:10px 0 0;z-index:5}
+nav.tabs button{font:inherit;font-weight:600;font-size:15px;padding:10px 14px;border:0;background:none;color:var(--faint);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+nav.tabs .tn{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--pink);margin-right:8px}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--red)}
+section[hidden]{display:none}
+.nstar{background:var(--bordeaux);color:#faf5f1;border-radius:20px;padding:22px 26px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}.nproof{border-left:1px solid rgba(255,255,255,.25);padding-left:22px;min-width:220px}.nproof strong{display:block;font-size:44px;line-height:1;font-weight:400;margin:6px 0 4px}.nproof span{font-size:14px;color:#f3d9e5}.nstar p{margin:6px 0 0;font-size:clamp(28px,4vw,40px);line-height:1.1}
+.star{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:28px}
+.dim{border:1px solid var(--line);border-radius:16px;padding:16px 18px;background:var(--bg)}
+.dim h3{margin:4px 0 4px;font-size:24px}
+.dim p{margin:0;color:var(--soft);font-size:14px}
+.dim.money{background:var(--bordeaux);border-color:var(--bordeaux);color:#faf5f1}
+.dim.money p,.dim.money .eyebrow{color:#f3d9e5}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;align-items:center}
+.filters .lbl{font-size:12px;font-weight:700;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;margin-right:4px}
+.chip{font:inherit;font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--soft);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tier{display:flex;flex-direction:column;align-items:center;gap:14px}
+.arrow{width:2px;height:22px;background:var(--line)}
+.card{border:1px solid var(--line);border-radius:16px;padding:16px 18px;background:var(--bg);text-align:left;font:inherit;color:inherit;cursor:pointer;width:100%;transition:border-color .15s,opacity .2s}
+.card:hover{border-color:var(--bordeaux)}
+.card.dim-out{opacity:.25}
+.card .name{font-size:18px;font-weight:700}
+.card .title{color:var(--soft);font-size:14px;margin-left:6px;font-weight:500}
+.card .desc{color:var(--soft);font-size:14px;margin:6px 0 0}
+.pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;margin-left:8px;vertical-align:middle}
+.s-running{background:var(--citrusbg);color:#5a4a00}
+.s-building{background:var(--pinkbg);color:var(--bordeaux)}
+.s-next{background:var(--pinkbg);color:var(--bordeaux)}
+.s-later{background:var(--panel);color:var(--soft)}
+.s-external{background:transparent;border:1px dashed var(--faint);color:var(--soft)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .s-running{color:var(--citrus)}:root:not([data-theme="light"]) .s-building,:root:not([data-theme="light"]) .s-next{color:var(--pink)}}
+.tierra{max-width:560px;border:2px solid var(--ink)}
+.nadia{max-width:720px;background:var(--bordeaux);border-color:var(--bordeaux);color:#faf5f1}
+.nadia .title,.nadia .desc{color:#f3d9e5}
+.nadia .wf{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.nadia .wf span{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.14)}
+.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;width:100%}
+.group{border:1px solid var(--line);border-radius:18px;padding:14px;background:var(--panel);display:flex;flex-direction:column;gap:10px}
+.group h4{margin:2px 4px 2px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bordeaux)}
+.brain{width:100%;border-radius:18px;padding:18px;border:1px solid var(--line);background:var(--panel)}
+.brain h3{margin:0 0 10px;font-size:28px}
+.brainset{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+.bitem{padding:10px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--line);font-size:14px;font-weight:600}
+.bitem small{display:block;font-weight:400;color:var(--soft);font-size:12px}
+.bitem.p1{border-color:var(--red)}
+.bitem.p1 small::before{content:"Phase 1 database · ";color:var(--red);font-weight:700}
+.derek{width:100%;max-width:720px;border:1.5px dashed var(--faint);background:transparent}
+.proof{width:100%;max-width:560px;text-align:center;border-radius:16px;padding:14px;border:1px solid var(--line)}
+.proof strong{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:32px;display:block;line-height:1.1}
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(20,17,18,.35);z-index:20}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(460px,100%);background:var(--bg);z-index:21;box-shadow:-10px 0 40px rgba(0,0,0,.15);overflow:auto;padding:calc(28px + env(safe-area-inset-top,0px)) 26px calc(28px + env(safe-area-inset-bottom,0px))}
+.drawer h2{margin:6px 0 2px;font-size:40px;line-height:1}
+.drawer h5{margin:20px 0 6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--bordeaux)}
+.drawer p,.drawer li{color:var(--soft);font-size:15px}
+.drawer ul{padding-left:18px;margin:0}
+.close{float:right;font:inherit;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}
+/* phase 1 */
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}
+.sys{border-radius:18px;padding:20px;border:1px solid var(--line)}
+.sys .n{font-family:"Instrument Serif",Georgia,serif;font-size:44px;line-height:1;color:var(--red)}
+.sys h3{margin:6px 0 4px;font-size:22px}
+.sys .cond{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bordeaux)}
+.sys p{color:var(--soft);font-size:14.5px;margin:8px 0 0}
+.phasenav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 22px}.ph{font:inherit;text-align:left;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--soft);font-weight:600;cursor:pointer}.ph span{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:700}.ph[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}.ph[aria-pressed="true"] span{color:var(--pink)}
+.timeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;margin-top:14px;border-top:3px solid var(--ink)}
+.step{padding:14px 16px 4px 0;position:relative}
+.step::before{content:"";position:absolute;top:-9px;left:0;width:15px;height:15px;border-radius:50%;background:var(--bg);border:3px solid var(--ink)}
+.step.now::before{background:var(--red);border-color:var(--red)}
+.step h4{margin:8px 0 4px;font-size:15px}
+.step p{margin:0;color:var(--soft);font-size:14px}
+h2.sec{font-size:36px;margin:40px 0 4px}
+.lede{color:var(--soft);margin:0 0 16px;max-width:720px}
+.review{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.rv{padding:16px 18px;border-left:3px solid var(--pink);background:var(--panel);border-radius:0 14px 14px 0}
+.rv h4{margin:0 0 6px;font-size:16px}
+.rv p{margin:0;color:var(--soft);font-size:14px}
+.rv.urgent{border-left-color:var(--red)}
+.why{display:grid;grid-template-columns:1fr auto 1fr;gap:10px 14px;align-items:center;max-width:820px}
+.why .from{padding:12px 14px;border-radius:12px;background:var(--pinkbg);font-weight:600;font-size:14px}
+.why .to{padding:12px 14px;border-radius:12px;border:1px solid var(--line);font-size:14px}
+.why .ar{color:var(--red);font-weight:700}
+.callout{margin-top:16px;padding:16px 18px;border-radius:14px;background:var(--citrusbg);max-width:820px;font-size:15px}
+/* workflows */
+.wflist{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.wfc .when{font-size:12px;font-weight:700;color:var(--red);letter-spacing:.06em;text-transform:uppercase}
+.cb{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:14px}
+.cbp{border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.cbp .k{font-family:"Instrument Serif",Georgia,serif;font-size:30px;color:var(--bordeaux);line-height:1}
+.cbp h4{margin:4px 0 4px;font-size:16px}
+.cbp p{margin:0;color:var(--soft);font-size:14px}
+/* readiness */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.metric{border:1px solid var(--line);border-radius:18px;padding:18px}
+.metric .v{font-family:"Instrument Serif",Georgia,serif;font-size:52px;line-height:1;margin:8px 0 4px}
+.metric p{margin:0;color:var(--soft);font-size:14px}
+.bar{height:12px;border-radius:999px;background:var(--panel);overflow:hidden;margin-top:12px;border:1px solid var(--line)}
+.bar i{display:block;height:100%;width:0;background:var(--red)}
+[contenteditable="true"]{outline:1.5px dashed var(--pink);outline-offset:3px;border-radius:4px}
+:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+@media (max-width:640px){.why{grid-template-columns:1fr}.why .ar{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div>
+    <div class="eyebrow">Living operating system · v3</div>
+    <h1 class="serif">Tierra's Intelligence OS</h1>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
+    <p class="north" data-edit="north">The team produces. Nadia operates. I decide.</p>
+    <button class="editbtn" id="editbtn" aria-pressed="false">Edit text</button>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" aria-selected="true" data-tab="map"><span class="tn">01</span>The system</button>
+  <button role="tab" aria-selected="false" data-tab="workflows"><span class="tn">02</span>How it runs</button>
+  <button role="tab" aria-selected="false" data-tab="phase"><span class="tn">03</span>How it grows</button>
+  <button role="tab" aria-selected="false" data-tab="ready"><span class="tn">04</span>Is it working?</button>
+</nav>
+
+<!-- MAP -->
+<section id="tab-map">
+  <div class="nstar"><div><div class="eyebrow" style="color:#f3d9e5">North star</div><p class="serif" data-edit="nstar">Build me into a confident, prepared, and recognized strategy leader.</p></div><div class="nproof"><div class="eyebrow" style="color:#f3d9e5">Proof it's working</div><strong class="serif">$150,000</strong><span data-edit="d4">a year in strategy work I originate directly</span></div></div>
+  <div class="star">
+    <div class="dim"><div class="eyebrow">Condition</div><h3 class="serif">Confidence</h3><p data-edit="d1">I know my voice, my point of view, and how I show up in the field.</p></div>
+    <div class="dim"><div class="eyebrow">Condition</div><h3 class="serif">Preparedness</h3><p data-edit="d2">I walk into consequential rooms with the context, evidence, and POV to lead.</p></div>
+    <div class="dim"><div class="eyebrow">Condition</div><h3 class="serif">Practice leadership</h3><p data-edit="d3">I define, sell, deliver, and grow a durable strategy practice at V+H.</p></div>
+  </div>
+
+  <div class="filters" id="filters">
+    <span class="lbl">Show</span>
+    <button class="chip" aria-pressed="true" data-f="all">Everything</button>
+    <button class="chip" aria-pressed="false" data-f="voice">Voice + Authority</button>
+    <button class="chip" aria-pressed="false" data-f="prep">Preparedness</button>
+    <button class="chip" aria-pressed="false" data-f="practice">Practice Leadership</button>
+    <button class="chip" aria-pressed="false" data-f="vh">V+H</button>
+    <button class="chip" aria-pressed="false" data-f="flavvrr">FLAVVRR</button>
+    <button class="chip" aria-pressed="false" data-f="personal">Personal OS</button>
+    <button class="chip" aria-pressed="false" data-f="microsoft">Microsoft</button>
+    <button class="chip" aria-pressed="false" data-f="running">Running</button>
+    <button class="chip" aria-pressed="false" data-f="building">Building now</button>
+    <button class="chip" aria-pressed="false" data-f="later">Later</button>
+  </div>
+
+  <div class="tier" id="map"></div>
+</section>
+
+<!-- PHASE 1 -->
+<section id="tab-phase" hidden>
+  <div class="eyebrow">How it grows</div>
+  <h2 class="sec serif" style="margin-top:6px">Three phases, one operator</h2>
+  <p class="lede">Each phase starts when the one before it is running and real volume earns the next roles. Nadia runs every phase.</p>
+  <div class="phasenav" id="phasenav">
+    <button class="ph" aria-pressed="true" data-ph="1"><span>Phase 1</span>Foundation</button>
+    <button class="ph" aria-pressed="false" data-ph="2"><span>Phase 2</span>Depth</button>
+    <button class="ph" aria-pressed="false" data-ph="3"><span>Phase 3</span>Scale</button>
+  </div>
+
+  <div class="phpanel" data-panel="1">
+  <p class="lede"><strong>Now, over three weeks.</strong> Build the three conditions that matter most: preparedness, voice, and practice leadership.</p>
+  <div class="grid3">
+    <div class="sys" style="border-color:var(--red)"><div class="n">A</div><div class="cond">Preparedness</div><h3>Confidence Brief system</h3><p>Nadia spots consequential rooms three business days out and starts the brief at least a day ahead. Julian adds the POV and a Perplexity research sprint when fresh evidence matters. After the room, two quick questions become Leadership Evidence.</p></div>
+    <div class="sys"><div class="n">B</div><div class="cond">Voice + Authority</div><h3>Voice system</h3><p>The Voice Library holds my POVs, stories, phrases, and approved writing, seeded from my samples and voice skill. Every brief pulls my own language, and June turns what I say in rooms into reusable language.</p></div>
+    <div class="sys"><div class="n">C</div><div class="cond">Practice Leadership</div><h3>Strategy Practice Pipeline</h3><p>One pipeline of strategy and research opportunities, tagged by who originated it and whether it's V+H or FLAVVRR. Julian owns it and carries Arden's job until volume says otherwise.</p></div>
+  </div>
+  <div class="timeline">
+    <div class="step now"><h4>Week one</h4><p>Nadia's updated manual. Four Notion databases: Confidence Briefs, Voice Library, Leadership Evidence, Strategy Practice Pipeline.</p></div>
+    <div class="step"><h4>Week two</h4><p>Julian starts. Loads the pipeline and writes the POV for my next two big rooms.</p></div>
+    <div class="step"><h4>Week three</h4><p>June starts. Seeds the Voice Library and drafts one scraps post a week from my dictations.</p></div>
+  </div>
+  </div>
+
+  <div class="phpanel" data-panel="2" hidden>
+  <p class="lede"><strong>When Phase 1 is running and the work gets heavy.</strong> Deepen the intelligence behind every room and every deal.</p>
+  <div class="grid3">
+    <div class="sys"><div class="n">A</div><div class="cond">Preparedness</div><h3>Theo, Head of Research</h3><p>Starts when Julian's research sprints get frequent enough to need their own owner. Runs in Perplexity Computer with Matt and writes findings back to Notion.</p></div>
+    <div class="sys"><div class="n">B</div><div class="cond">Preparedness</div><h3>Mira, Client Intelligence</h3><p>Starts when client context in Confidence Briefs gets too big to manage by hand. Brings the Client + Prospect Intelligence and Decision + Commitment Log databases.</p></div>
+    <div class="sys"><div class="n">C</div><div class="cond">Practice Leadership</div><h3>Arden, Head of New Business</h3><p>Starts when the pipeline has enough deals to need dedicated tending. Takes the pipeline over from Julian.</p></div>
+  </div>
+  </div>
+
+  <div class="phpanel" data-panel="3" hidden>
+  <p class="lede"><strong>When the practice has repeatable work and real numbers.</strong> Package it, measure it, and fund the future.</p>
+  <div class="grid3">
+    <div class="sys"><div class="n">A</div><div class="cond">Practice Leadership</div><h3>Sloane, Practice Architect</h3><p>Starts after I've run the same kind of scope or workshop three times. Turns it into offers, methods, templates, and case studies.</p></div>
+    <div class="sys"><div class="n">B</div><div class="cond">Commercial proof</div><h3>Priya, Business Intelligence</h3><p>Starts when there are enough numbers for a dashboard to be interesting. Takes over the Readiness tab and weekly movement.</p></div>
+    <div class="sys"><div class="n">C</div><div class="cond">Personal OS</div><h3>Vivian, Chief Financial Officer</h3><p>Starts after the October 31 expense catch-up, which runs as its own project now. Books, cash, and wealth building.</p></div>
+  </div>
+  </div>
+
+  <h2 class="sec serif">Architecture review</h2>
+  <div class="review">
+    <div class="rv"><h4>Overbuilt bench</h4><p>Ten roles all flowing through Nadia's quality check makes her the bottleneck. Start with three.</p></div>
+    <div class="rv"><h4>Overlapping roles</h4><p>Mira, Julian, and Confidence Briefs share client context. Arden and Julian split one job. Sloane grows out of Julian's scopes. Priya overlaps Nadia's summaries.</p></div>
+    <div class="rv"><h4>Unclear ownership</h4><p>Who logs Leadership Evidence, who writes Perplexity findings back to Notion, what counts as originated revenue, and how my edits sharpen the Voice Library.</p></div>
+    <div class="rv urgent"><h4>Can't wait</h4><p>V+H expense catch-up is due October 31. Run it as a one-time project this month, separate from Vivian.</p></div>
+  </div>
+
+  <h2 class="sec serif">Why the bench looks like this</h2>
+  <p class="lede">My feedback reframed the north star around confidence and readiness. Each role is a capability a practice leader needs.</p>
+  <div class="why">
+    <div class="from">Confidence in my voice</div><div class="ar">→</div><div class="to">Voice Library and Leadership Evidence</div>
+    <div class="from">Prepared to lead rooms</div><div class="ar">→</div><div class="to">Confidence Briefs, with Theo and Mira later</div>
+    <div class="from">Able to run the practice</div><div class="ar">→</div><div class="to">Arden sells it, Sloane packages it, Mira deepens it</div>
+  </div>
+  <div class="callout"><strong>The guardrail:</strong> some of that capability has to live in me. Agents make the reps easier, and the reps are what build the confidence.</div>
+</section>
+
+<!-- WORKFLOWS -->
+<section id="tab-workflows" hidden>
+  <div class="eyebrow">How it runs</div>
+  <h2 class="sec serif" style="margin-top:6px">The operating rhythm</h2>
+  <p class="lede">This is the heartbeat of the whole system. Nadia runs every workflow, the bench feeds them, and only decisions, approvals, and exceptions reach me. Protected until 9am. Tap any workflow for details.</p>
+  <div class="wflist" id="wflist"></div>
+
+  <h2 class="sec serif">The Confidence Brief</h2>
+  <p class="lede">One page, ready at least one business day before any consequential room, so I can make it my own.</p>
+  <div class="cb" id="cb"></div>
+</section>
+
+<!-- READINESS -->
+<section id="tab-ready" hidden>
+  <div class="eyebrow">Is it working?</div>
+  <h2 class="sec serif" style="margin-top:6px">Am I becoming the leader I want to be?</h2>
+  <p class="lede">These fill in automatically once the Phase 1 Notion databases are live and connected.</p>
+  <div class="metrics">
+    <div class="metric"><div class="eyebrow">Preparedness</div><div class="v">—</div><p>Consequential rooms with a Confidence Brief ready a day ahead</p></div>
+    <div class="metric"><div class="eyebrow">Voice + Authority</div><div class="v">—</div><p>POVs and phrases added to the Voice Library this month, plus posts published</p></div>
+    <div class="metric"><div class="eyebrow">Practice Leadership</div><div class="v">—</div><p>Leadership Evidence entries logged this month</p></div>
+    <div class="metric" style="border-color:var(--bordeaux)"><div class="eyebrow">Commercial proof</div><div class="v">$0<span style="font-size:22px;color:var(--faint)"> / $150K</span></div><p>Originated strategy revenue this year, plus open pipeline</p><div class="bar"><i></i></div></div>
+  </div>
+  <div class="callout" style="background:var(--panel)">Waiting on live data from Notion: Confidence Briefs, Voice Library, Leadership Evidence, and Strategy Practice Pipeline.</div>
+</section>
+</div>
+
+<script>
+const roles={
+ tierra:{name:"Tierra",title:"Partner + CSO, Head of Cultural Intelligence",status:"running",tags:["voice","prep","practice","vh","flavvrr","personal"],desc:"Vision, final judgment, key relationships, and the decisions only I can make.",outcome:"Become a confident, prepared, and recognized strategy leader.",owns:["Vision and final strategic judgment","Key relationships and high-stakes client work","Final approvals","Decisions that need my taste, POV, or leadership"],lives:"Everywhere, and only where I choose."},
+ nadia:{name:"Nadia",title:"Chief of Staff + Operator",status:"running",tags:["voice","prep","practice","vh","flavvrr","personal"],desc:"Runs priorities, the executive bench, quality, follow-through, and escalation. Creates the conditions for my confidence, preparedness, and practice leadership.",outcome:"I start each day ahead. The bench moves without prompting. Only decisions, approvals, and exceptions reach me.",owns:["Morning ROB and weekly plan","Confidence Briefs","Approval queue","Human commitments tracker","Calendar protection and the Today page","Shared Brain hygiene"],q:"What does Tierra need to decide, and what can the team move without her?",lives:"Cowork scheduled tasks, Slack #chiefofstaff-nadia, and Notion.",phase:"Running now. Phase 1 adds the leadership build and Confidence Briefs."},
+ julian:{name:"Julian",title:"Head of Strategy",status:"building",group:"Growth + Intelligence",tags:["practice","voice","prep","vh"],desc:"Turns research, client needs, and my POV into strategy work that grows the practice.",outcome:"Grow the V+H strategy practice.",owns:["Strategy POVs","Client opportunity maps","Strategy scopes and workshop plans","Strategic recommendations","The pipeline until Arden starts"],q:"What should we do or believe because of what is happening?",lives:"Claude for synthesis, Perplexity for research sprints, Notion for durable learning.",phase:"Phase 1, week two."},
+ theo:{name:"Theo",title:"Head of Research",status:"later",group:"Growth + Intelligence",tags:["prep","voice","vh","flavvrr"],desc:"Culture scouting, research signals, RFP intelligence, prospect dossiers, and source validation.",outcome:"Defensible cultural intelligence before the room needs it.",owns:["Culture scouting","RFP intelligence","Prospect dossiers","Evidence and source validation"],q:"What is happening, what supports it, and what matters now?",lives:"Perplexity Computer, run with Matt. Findings written back to Notion.",phase:"When Julian's research sprints get frequent enough to need their own owner."},
+ arden:{name:"Arden",title:"Head of New Business",status:"later",group:"Growth + Intelligence",tags:["practice","vh","flavvrr"],desc:"Qualifies opportunities and turns relevance into a deliberate pipeline.",outcome:"A qualified pipeline for V+H and FLAVVRR strategy and research work.",owns:["Target accounts","Opportunity qualification","Pursuit briefs","Outreach drafts for approval"],lives:"Claude and Notion.",phase:"When the pipeline has enough deals to need dedicated tending. Julian carries it until then."},
+ june:{name:"June",title:"Head of Editorial",status:"next",group:"Authority + Practice",tags:["voice"],desc:"Turns my actual thinking into visible authority in my own voice.",outcome:"Help me see, refine, and own what I believe, in public.",owns:["LinkedIn and my future Substack","Founder POV archive","Editorial calendar","Voice Library maintenance"],lives:"Claude with my voice skill, and the Voice Library in Notion.",phase:"Phase 1, week three, once the Voice Library has real material."},
+ sloane:{name:"Sloane",title:"Practice Architect",status:"later",group:"Authority + Practice",tags:["practice","vh"],desc:"Turns one-off strategy work into repeatable offers, methods, and proof.",outcome:"The practice feels owned, not improvised.",owns:["Offer architecture","Method library","Case studies","Scope, workshop, and deliverable templates"],lives:"Claude and Notion.",phase:"After I've run the same kind of scope or workshop three times."},
+ mira:{name:"Mira",title:"Client Intelligence",status:"later",group:"Delivery + Business Health",tags:["prep","practice","vh"],desc:"Keeps every client relationship cumulative: context, decisions, stakeholders, and opportunities.",outcome:"No client context gets lost between rooms.",owns:["Account maps","Meeting capture","Client decision logs","Expansion watchlist"],lives:"Notion, fed by Granola.",phase:"When client context in Confidence Briefs gets too big to manage by hand."},
+ priya:{name:"Priya",title:"Head of Business Intelligence",status:"later",group:"Delivery + Business Health",tags:["practice","vh","flavvrr"],desc:"Makes business and practice movement visible and actionable.",outcome:"I'm never surprised by a number.",owns:["Weekly dashboard","Strategy-practice revenue view","Pipeline movement","What changed and what it calls for"],lives:"Notion and this page's Readiness tab.",phase:"When there are enough numbers for a dashboard to be interesting."},
+ vivian:{name:"Vivian",title:"Chief Financial Officer",status:"later",group:"Delivery + Business Health",tags:["flavvrr","personal"],desc:"A current view of FLAVVRR finances, expenses, cash, and wealth building.",outcome:"FLAVVRR's books are current and my wealth picture is clear.",owns:["Books and expenses","Cash outlook","Monthly close","Financial decision briefs"],lives:"My own Cowork and a private section of Notion.",phase:"After the October 31 expense catch-up, which runs as its own project now."},
+ derek:{name:"Derek",title:"Head of Operations, Microsoft",status:"external",tags:["microsoft"],desc:"Keeps my Microsoft work moving around the clock while I engage noon to 5.",outcome:"Microsoft moves in the background. I start at noon already ahead.",owns:["Noon handoff and Pacific close","Intake prep","Shutdown summary","Weekly note to Lora"],lives:"Microsoft 365 Copilot only. Outside the Shared Brain and outside Nadia's authority. Nadia sees busy time, nothing more.",phase:"Built. External system."}
+};
+const statusLabel={running:"Running",building:"Building",next:"Next up",later:"Later",external:"External"};
+const brain=[["Identity + Voice","Bio, voice guide, POVs, samples",1],["Strategy Practice","Target, vision, offers, pipeline",1],["Client + Prospect Intelligence","Stakeholders, history, decisions",0],["Research Library + Signals","Research, sources, implications",0],["Offers + Methods","Products, workshops, case studies",0],["People + Commitments","Jay, Kyle, Joe, Matt, promises",0],["Personal OS","Calendar rules, blocks, travel",0],["Money + Metrics","Books, pipeline, dashboards",0],["Leadership Evidence","Proof I'm becoming this leader",1],["Confidence Briefs","One page before every big room",1]];
+
+function card(k,extra=""){const r=roles[k];return `<button class="card ${extra}" data-role="${k}" data-tags="${r.tags.join(" ")} ${r.status}"><span class="name">${r.name}</span><span class="title">${r.title}</span><span class="pill s-${r.status}">${statusLabel[r.status]}</span><p class="desc">${r.desc}</p>${k==="nadia"?'<div class="wf"><span>Morning ROB</span><span>Weekly plan</span><span>Confidence Briefs</span><span>Approval queue</span></div>':""}</button>`}
+function renderMap(){
+ const groups={};Object.keys(roles).forEach(k=>{const g=roles[k].group;if(g)(groups[g]=groups[g]||[]).push(k)});
+ document.getElementById("map").innerHTML=
+ card("tierra","tierra")+'<div class="arrow"></div>'+card("nadia","nadia")+'<div class="arrow"></div>'+
+ '<div class="groups">'+Object.entries(groups).map(([g,ks])=>`<div class="group"><h4>${g}</h4>${ks.map(k=>card(k)).join("")}</div>`).join("")+'</div><div class="arrow"></div>'+
+ `<div class="brain"><div class="eyebrow">Foundation · Notion</div><h3 class="serif">The Shared Brain</h3><div class="brainset">${brain.map(b=>`<div class="bitem ${b[2]?"p1":""}">${b[0]}<small>${b[1]}</small></div>`).join("")}</div></div>`+
+ `<div style="height:18px"></div><div class="eyebrow" style="color:var(--faint)">Separate system</div>`+card("derek","derek");
+}
+function applyFilter(f){document.querySelectorAll("#map .card").forEach(c=>{const t=c.dataset.tags.split(" ");let show=f==="all"||t.includes(f)||(f==="building"&&(t.includes("building")||t.includes("next")));if(c.dataset.role==="tierra")show=true;c.classList.toggle("dim-out",!show)})}
+document.getElementById("filters").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));applyFilter(b.dataset.f)});
+
+function openDrawer(html){closeDrawer();const s=document.createElement("div");s.className="scrim";s.onclick=closeDrawer;const d=document.createElement("aside");d.className="drawer";d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");d.innerHTML='<button class="close" aria-label="Close">Close</button>'+html;d.querySelector(".close").onclick=closeDrawer;document.body.append(s,d);d.querySelector(".close").focus()}
+function closeDrawer(){document.querySelectorAll(".scrim,.drawer").forEach(n=>n.remove())}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDrawer()});
+document.addEventListener("click",e=>{const c=e.target.closest("[data-role]");if(c&&!document.body.classList.contains("editing")){const r=roles[c.dataset.role];openDrawer(`<div class="eyebrow">${r.group||"Leadership"}</div><h2 class="serif">${r.name}</h2><p style="margin:0;font-weight:600;color:var(--ink)">${r.title} <span class="pill s-${r.status}">${statusLabel[r.status]}</span></p><h5>Outcome</h5><p>${r.outcome}</p>${r.q?`<h5>Core question</h5><p class="serif" style="font-size:22px;color:var(--ink)">${r.q}</p>`:""}<h5>Owns</h5><ul>${r.owns.map(o=>`<li>${o}</li>`).join("")}</ul><h5>Where it lives</h5><p>${r.lives}</p>${r.phase?`<h5>Activation</h5><p>${r.phase}</p>`:""}`)}
+ const w=e.target.closest("[data-wf]");if(w){const x=wfs[w.dataset.wf];openDrawer(`<div class="eyebrow">Nadia's workflow</div><h2 class="serif">${x.name}</h2><p style="margin:0;font-weight:600;color:var(--red)">${x.when}</p><h5>What she does</h5><ul>${x.steps.map(s=>`<li>${s}</li>`).join("")}</ul><h5>Builds</h5><p>${x.builds}</p>`)}});
+
+const wfs={
+ today:{name:"Today page",when:"Every night, 9pm",steps:["Files today's brief in Past briefs","Writes tomorrow's page in Notion","Night view shows only wake time and first thing"],builds:"Preparedness, and mornings that start decided."},
+ rob:{name:"Morning ROB",when:"Weekdays, 9am",steps:["Top three, ranked, with why","Everything else that needs me, ranked","What the bench moved since yesterday","What Jay, Kyle, Joe, and Matt owe me","Drafts waiting for review","Starts any Confidence Brief due in the next three business days"],builds:"Preparedness and practice leadership."},
+ mid:{name:"Midday check-in",when:"Weekdays, 12:30pm",steps:["Only what changed since 9am","Whether the top three still hold"],builds:"Focus inside my Microsoft window."},
+ wrap:{name:"Wrap-up",when:"Weekdays, 5pm",steps:["What got done and what's still open","What's mine tomorrow","Fridays: weekly recap plus a five-minute Leadership Evidence check-in"],builds:"Voice and practice leadership, through captured evidence."},
+ week:{name:"Weekly plan",when:"Sundays, 6pm · approve by 9am Monday",steps:["Opens with this week's leadership build: Voice + Authority, Preparedness, Practice Leadership, Commercial Proof","Priorities for me and each executive","Runs as drafted if I don't respond"],builds:"All three conditions, on purpose every week."},
+ brief:{name:"Confidence Brief",when:"At least one business day before a consequential room",steps:["The room, the decision, the context","My point of view and proof","Questions, watchouts, and the next move","After the room: two questions logged as Leadership Evidence"],builds:"Preparedness, and confidence that shows up in the room."},
+ approve:{name:"Approval queue",when:"Inside every ROB",steps:["External messages ready to send","Client commitments and calendar changes with others","V+H versus FLAVVRR routing calls","Money, partnership, and risk exceptions"],builds:"My time, protected for decisions only I can make."}
+};
+document.getElementById("wflist").innerHTML=Object.entries(wfs).map(([k,w])=>`<button class="card wfc" data-wf="${k}"><div class="when">${w.when}</div><div class="name" style="margin-top:4px">${w.name}</div><p class="desc">${w.builds}</p></button>`).join("");
+const cbParts=[["The room","Who's there, their roles, history, and what's at stake for them."],["The decision","What needs to happen, what I need, what they need, what's open."],["The context","Only what materially affects the conversation."],["My point of view","What I believe, what to lead with, and the tension in the room."],["Proof","Evidence, past work, research, and language I can reference."],["Questions","The ones that move the room and fill my gaps."],["Watchouts","Sensitivities, open commitments, and dynamics to handle with care."],["The next move","What success looks like right after, and who owns follow-up."]];
+document.getElementById("cb").innerHTML=cbParts.map((p,i)=>`<div class="cbp"><div class="k">${i+1}</div><h4>${p[0]}</h4><p>${p[1]}</p></div>`).join("");
+
+document.querySelector("nav.tabs").addEventListener("click",e=>{const b=e.target.closest("[data-tab]");if(!b)return;document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x===b?"true":"false"));["map","phase","workflows","ready"].forEach(t=>document.getElementById("tab-"+t).hidden=t!==b.dataset.tab);window.scrollTo({top:0})});
+
+document.getElementById("phasenav").addEventListener("click",e=>{const b=e.target.closest(".ph");if(!b)return;document.querySelectorAll(".ph").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));document.querySelectorAll(".phpanel").forEach(p=>p.hidden=p.dataset.panel!==b.dataset.ph)});
+// editable text, saved per browser
+const KEY="tierra-os-edits";let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
+document.querySelectorAll("[data-edit]").forEach(el=>{if(saved[el.dataset.edit])el.textContent=saved[el.dataset.edit]});
+document.getElementById("editbtn").addEventListener("click",e=>{const on=e.currentTarget.getAttribute("aria-pressed")!=="true";e.currentTarget.setAttribute("aria-pressed",on);e.currentTarget.textContent=on?"Done editing":"Edit text";document.body.classList.toggle("editing",on);document.querySelectorAll("[data-edit]").forEach(el=>{el.contentEditable=on;if(!on){saved[el.dataset.edit]=el.textContent;}});if(!on){try{localStorage.setItem(KEY,JSON.stringify(saved))}catch(err){}}});
+
+renderMap();
+</script>
+</body>
+</html>
